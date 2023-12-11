@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Christmas Lights</title>
+  <style>
+    .circle {
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      margin: 5px;
+      transition: background-color 0.5s ease;
+    }
+  </style>
+</head>
+<body>
+
+<button onclick="toggleLights()">Start/Stop</button>
+<input type="number" id="intervalInput" placeholder="Interval (ms)" />
+<button onclick="changeInterval()">Change Interval</button>
+
+<div id="lightsContainer">
+</div>
+
+<script>
+  let intervalId;
+  let interval = 1000; // default interval
+  let running = false;
+
+  function toggleLights() {
+    running = !running;
+    if (running) {
+      intervalId = setInterval(updateLights, interval);
+    } else {
+      clearInterval(intervalId);
+    }
+  }
+
+  function changeInterval() {
+    const newInterval = document.getElementById("intervalInput").value;
+    if (!isNaN(newInterval) && newInterval > 0) {
+      interval = parseInt(newInterval);
+      if (running) {
+        clearInterval(intervalId);
+        intervalId = setInterval(updateLights, interval);
+      }
+    }
+  }
+
+  function updateLights() {
+    const lightsContainer = document.getElementById("lightsContainer");
+    lightsContainer.innerHTML = '';
+
+    const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet'];
+
+    for (let i = 0; i < 7; i++) {
+      const circle = document.createElement('div');
+      circle.className = 'circle';
+      circle.style.backgroundColor = colors[i];
+      circle.style.opacity = i === 0 ? '1' : '0.5'; // Brighten the first circle
+
+      lightsContainer.appendChild(circle);
+    }
+  }
+</script>
+
+</body>
+</html>
