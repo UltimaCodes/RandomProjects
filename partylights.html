@@ -11,7 +11,7 @@
       height: 30px;
       border-radius: 50%;
       margin: 5px;
-      transition: background-color 0.5s ease;
+      transition: opacity 0.5s ease;
     }
   </style>
 </head>
@@ -26,8 +26,9 @@
 
 <script>
   let intervalId;
-  let interval = 1000; // default interval
+  let interval = 1000; 
   let running = false;
+  let currentCircle = 0;
 
   function toggleLights() {
     running = !running;
@@ -59,10 +60,12 @@
       const circle = document.createElement('div');
       circle.className = 'circle';
       circle.style.backgroundColor = colors[i];
-      circle.style.opacity = i === 0 ? '1' : '0.5'; // Brighten the first circle
+      circle.style.opacity = i === currentCircle ? '1' : '0.5';
 
       lightsContainer.appendChild(circle);
     }
+
+    currentCircle = (currentCircle + 1) % 7;
   }
 </script>
 
