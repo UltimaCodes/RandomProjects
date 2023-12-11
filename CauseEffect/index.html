@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Person Details</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <div class="controls">
+      <input type="text" id="search" placeholder="Search by name">
+      <label for="sort">Sort by:</label>
+      <select id="sort">
+        <option value="name">Name</option>
+        <option value="birthday">Birthday</option>
+      </select>
+    </div>
+    <div class="panes">
+      <div class="summary-pane">
+        <ul id="names-list"></ul>
+      </div>
+      <div class="details-pane" id="details-pane">
+        <p>Select a person to see details</p>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>
