@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ColorCycle</title>
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    #color-box {
+      width: 200px;
+      height: 200px;
+      border: 1px solid #000;
+      transition: background-color 0.25s ease;
+    }
+
+    input {
+      margin: 5px;
+      width: 40px;
+    }
+
+    button {
+      padding: 8px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <div>
+    <label for="red">Red:</label>
+    <input type="text" id="red" maxlength="2" value="FF">
+
+    <label for="green">Green:</label>
+    <input type="text" id="green" maxlength="2" value="00">
+
+    <label for="blue">Blue:</label>
+    <input type="text" id="blue" maxlength="2" value="00">
+
+    <label for="increment">Increment:</label>
+    <input type="text" id="increment" value="01">
+
+    <button id="toggleButton">Start</button>
+  </div>
+
+  <div id="color-box"></div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      const colorBox = document.getElementById('color-box');
+      const toggleButton = document.getElementById('toggleButton');
+
+      let intervalId;
+      let red = 255;
+      let green = 0;
+      let blue = 0;
+      let increment = 1;
+
+      function updateColorBox() {
+        colorBox.style.backgroundColor = `rgb(${red}, ${green}, ${blue})`;
+      }
+
+      function cycleColor() {
+        red = (red + parseInt(increment, 16)) % 256;
+        green = (green + parseInt(increment, 16)) % 256;
+        blue = (blue + parseInt(increment, 16)) % 256;
+        updateColorBox();
+      }
+
+      function toggleColorCycle() {
+        if (intervalId) {
+          clearInterval(intervalId);
+          toggleButton.textContent = 'Start';
+          intervalId = null;
+        } else {
+          intervalId = setInterval(cycleColor, 250);
+          toggleButton.textContent = 'Stop';
+        }
+      }
+
+      document.getElementById('red').addEventListener('input', (e) => red = parseInt(e.target.value, 16) || 0);
+      document.getElementById('green').addEventListener('input', (e) => green = parseInt(e.target.value, 16) || 0);
+      document.getElementById('blue').addEventListener('input', (e) => blue = parseInt(e.target.value, 16) || 0);
+      document.getElementById('increment').addEventListener('input', (e) => increment = e.target.value || 0);
+
+      toggleButton.addEventListener('click', toggleColorCycle);
+
+      updateColorBox();
+    })();
+  </script>
+</body>
+</html>
