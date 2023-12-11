@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSV2JSON</title>
+  <style>
+    /* Add your styles here */
+  </style>
+</head>
+<body>
+  <h1>CSV to JSON Converter</h1>
+  
+  <label for="csvInput">Paste CSV Syntax:</label>
+  <textarea id="csvInput" rows="10" cols="50"></textarea><br>
+  
+  <button onclick="convertToJSON()">Convert to JSON</button>
+  
+  <h2>JSON Output:</h2>
+  <textarea id="jsonOutput" rows="10" cols="50" readonly></textarea>
+  
+  <h2>JSON to CSV Converter</h2>
+  
+  <label for="jsonInput">Paste JSON Syntax:</label>
+  <textarea id="jsonInput" rows="10" cols="50"></textarea><br>
+  
+  <button onclick="convertToCSV()">Convert to CSV</button>
+  
+  <h2>CSV Output:</h2>
+  <textarea id="csvOutput" rows="10" cols="50" readonly></textarea>
+  
+  <!-- Bonus features -->
+  <h2>Bonus Features</h2>
+  
+  <label for="csvFilePath">CSV File Path:</label>
+  <input type="text" id="csvFilePath"><br>
+  
+  <button onclick="openCSVFile()">Open CSV</button>
+  <button onclick="saveCSVFile()">Save CSV</button>
+  
+  <label for="jsonFilePath">JSON File Path:</label>
+  <input type="text" id="jsonFilePath"><br>
+  
+  <button onclick="openJSONFile()">Open JSON</button>
+  <button onclick="saveJSONFile()">Save JSON</button>
+  
+  <script>
+    function convertToJSON() {
+      const csvInput = document.getElementById('csvInput').value;
+      try {
+        const jsonArray = CSVtoJSON(csvInput);
+        document.getElementById('jsonOutput').value = JSON.stringify(jsonArray, null, 2);
+      } catch (error) {
+        alert('Error converting CSV to JSON: ' + error.message);
+      }
+    }
+
+    function convertToCSV() {
+      const jsonInput = document.getElementById('jsonInput').value;
+      try {
+        const csvString = JSONtoCSV(jsonInput);
+        document.getElementById('csvOutput').value = csvString;
+      } catch (error) {
+        alert('Error converting JSON to CSV: ' + error.message);
+      }
+    }
+
+    function openCSVFile() {
+      const csvFilePath = document.getElementById('csvFilePath').value;
+      const fileInput = createFileInput('.csv', (content) => {
+        document.getElementById('csvInput').value = content;
+      });
+      fileInput.click();
+    }
+
+    function saveCSVFile() {
+      const csvContent = document.getElementById('csvInput').value;
+      const csvFilePath = document.getElementById('csvFilePath').value;
+      handleFileSave(csvContent, csvFilePath, 'text/csv');
+    }
+
+    function openJSONFile() {
+      const jsonFilePath = document.getElementById('jsonFilePath').value;
+      const fileInput = createFileInput('.json', (content) => {
+        document.getElementById('jsonInput').value = content;
+      });
+      fileInput.click();
+    }
+
+    function saveJSONFile() {
+      const jsonContent = document.getElementById('jsonInput').value;
+      const jsonFilePath = document.getElementById('jsonFilePath').value;
+      handleFileSave(jsonContent, jsonFilePath, 'application/json');
+    }
+
+    function createFileInput(accept, callback) {
+      const fileInput = document.createElement('input');
+      fileInput.type = 'file';
+      fileInput.accept = accept;
+      fileInput.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            callback(e.target.result);
+          };
+          reader.readAsText(file);
+        } else {
+          alert(`${accept.toUpperCase()} file not found`);
+        }
+      });
+      return fileInput;
+    }
+
+    function handleFileSave(content, filePath, contentType) {
+      if (!content.trim()) {
+        alert('Content is empty');
+        return;
+      }
+      const blob = new Blob([content], { type: contentType });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = filePath || `output.${contentType.split('/')[1]}`;
+      a.click();
+    }
+
+    function CSVtoJSON(csv) {
+      // Implement CSV to JSON conversion logic
+      const lines = csv.split('\n');
+      const result = [];
+      const headers = lines[0].split(',');
+      for (let i = 1; i < lines.length; i++) {
+        const obj = {};
+        const currentLine = lines[i].split(',');
+        for (let j = 0; j < headers.length; j++) {
+          obj[headers[j]] = currentLine[j];
+        }
+        result.push(obj);
+      }
+      return result;
+    }
+
+    function JSONtoCSV(json) {
+      // Implement JSON to CSV conversion logic
+      const jsonArray = JSON.parse(json);
+      const headers = Object.keys(jsonArray[0]);
+      const csvArray = [];
+      csvArray.push(headers.join(','));
+      for (let i = 0; i < jsonArray.length; i++) {
+        const values = headers.map(header => jsonArray[i][header]);
+        csvArray.push(values.join(','));
+      }
+      return csvArray.join('\n');
+    }
+  </script>
+</body>
+</html>
