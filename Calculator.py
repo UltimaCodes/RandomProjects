@@ -1,53 +1,46 @@
+import operator
+
 def add(a, b):
-    return a + b
+    return operator.add(a, b)
 
 def subtract(a, b):
-    return a - b
+    return operator.sub(a, b)
 
 def multiply(a, b):
-    return a * b
+    return operator.mul(a, b)
 
 def divide(a, b):
-    if b != 0:
-        return a / b
-    else:
+    try:
+        return operator.truediv(a, b)
+    except ZeroDivisionError:
         return "Error: Division by zero"
 
+def get_user_input(prompt):
+    while True:
+        try:
+            return float(input(prompt))
+        except ValueError:
+            print("Error: Please enter a valid number.")
+
 def calculator():
-    print("Stupidly Optimized Calculator")
-    print("1. Add")
-    print("2. Subtract")
-    print("3. Multiply")
-    print("4. Divide")
-    print("5. Exit")
+    print("Professional Optimized Calculator")
+    operations = {'1': add, '2': subtract, '3': multiply, '4': divide}
 
-    choice = input("Enter choice (1/2/3/4/5): ")
+    while True:
+        print("1. Add\n2. Subtract\n3. Multiply\n4. Divide\n5. Exit")
+        choice = input("Enter choice (1/2/3/4/5): ")
 
-    if choice == '5':
-        print("Exiting the calculator.")
-        return
+        if choice == '5':
+            print("Exiting the calculator.")
+            break
 
-    try:
-        num1 = float(input("Enter first number: "))
-        num2 = float(input("Enter second number: "))
-    except ValueError:
-        print("Error: Please enter valid numbers.")
-        return
-
-    if choice == '1':
-        result = add(num1, num2)
-    elif choice == '2':
-        result = subtract(num1, num2)
-    elif choice == '3':
-        result = multiply(num1, num2)
-    elif choice == '4':
-        result = divide(num1, num2)
-    else:
-        print("Error: Invalid input. Please enter a number between 1 and 5.")
-        return
-
-    print("Result: ", result)
+        if choice in operations:
+            num1 = get_user_input("Enter first number: ")
+            num2 = get_user_input("Enter second number: ")
+            result = operations[choice](num1, num2)
+            print("Result:", result)
+        else:
+            print("Error: Invalid input. Please enter a number between 1 and 5.")
 
 if __name__ == "__main__":
-    while True:
-        calculator()
+    calculator()
